@@ -1,0 +1,5 @@
+/dist/
+poetry.lock
+/managed_backups/
+*.pyc
+__pycache__

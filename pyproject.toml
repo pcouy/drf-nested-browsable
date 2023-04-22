@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "drf-nested-browsable"
+version = "0.1.0"
+description = "Writable nested serializers with forms for the Browsable API"
+authors = ["pcouy <contact@pierre-couy.dev>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "drf_nested_browsable"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+djangorestframework = "^3.14.0"
+django = "^4.2"
+
+
+[tool.poetry.group.dev.dependencies]
+python-lsp-server = "^1.7.2"
+pylint = "^2.17.2"
+mypy = "^1.2.0"
+djangorestframework-stubs = "^1.10.0"
+black = "^23.3.0"
+django-stubs = "^1.16.0"
+pylint-django = "^2.5.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pylint.format]
+max-line-length = "88"
+
+[tool.pylint.design]
+min-public-methods = 0
