@@ -1,8 +1,16 @@
 [tool.poetry]
 name = "drf-nested-browsable"
-version = "0.1.0"
+version = "0.1.1"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Framework :: Django",
+    "Intended Audience :: Developers"
+]
 description = "Writable nested serializers with forms for the Browsable API"
-authors = ["pcouy <contact@pierre-couy.dev>"]
+keywords = ["django", "rest framework", "drf", "browsable api", "nested serializers"]
+repository = "https://github.com/pcouy/drf-nested-browsable"
+homepage = "https://pierre-couy.dev/projects/drf-nested-browsable.html"
+authors = ["Pierre Couy <contact@pierre-couy.dev>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "drf_nested_browsable"}]
