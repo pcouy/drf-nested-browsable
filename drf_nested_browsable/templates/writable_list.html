@@ -1,0 +1,97 @@
+{% load rest_framework %}
+{% load drf_nested_browsable %}
+
+<fieldset>
+  {% if field.label %}
+    <div class="form-group" style="border-bottom: 1px solid #e5e5e5">
+      <legend class="control-label col-sm-2 {% if style.hide_label %}sr-only{% endif %}" style="border-bottom: 0">
+        {{ field.label }}
+      </legend>
+    </div>
+  {% endif %}
+
+  {% with templateId=field.name|addstr:"-form-template" %}
+    <div class="inner-form-list">
+      {% if field.tree_root is None or field.tree_root %}
+      <div class="inner-form-template" id="{{templateId}}">
+        <div class="inner-form-entry" data-index="{i}">
+          {% render_nested field.child prefix=field.name|addstr:"[{i}]" %}
+          <button class="del-entry" data-field="{{field.name}}">-</button>
+        </div>
+      </div>
+      {% endif %}
+
+      <pre>
+{{ field.child }}
+      </pre>
+
+      {% for entry in field.value %}
+        <div class="inner-form-entry" data-index="{{ forloop.counter0 }}">
+          {% if field.proxied is None %}
+            {% render_nested field.child data=entry prefix=field.name|addstr:"["|addstr:forloop.counter0|addstr:"]" %}
+            Not proxied
+          {% else %}
+            {% render_nested field.proxied.child data=entry prefix=field.name|addstr:"["|addstr:forloop.counter0|addstr:"]" %}
+            Proxied
+          {% endif %}
+
+          <button class="del-entry" data-field="{{field.name}}">-</button>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="inner-form-new">
+      <button class="add-entry" data-field="{{field.name}}">+</button>
+    </div>
+    <script>
+      window.onload = function () {
+              function addDelEvents() {
+                $('.inner-form-entry > button.del-entry').on('click', function(e){
+                        e.preventDefault();
+                        $(this).parent().remove();
+                })
+              }
+              $('.inner-form-new > button.add-entry').on('click', function(e){
+                      e.preventDefault();
+                      let id = $(this).data("field")+"-form-template";
+                      let templateElem = $("#"+id);
+                      let n = templateElem.parent().children(".inner-form-entry").last().data("index") + 1;
+                      n = n?n:0;
+                      let newHtml = templateElem.html().replaceAll("{i}",n);
+                      templateElem.parent().append(newHtml);
+                      addDelEvents();
+              })
+              addDelEvents();
+              $('form').on('submit', function() {
+                      console.log($('.inner-form-template'));
+                      $(".inner-form-template").remove();
+                      console.log($('.inner-form-template'));
+              })
+      };
+    </script>
+  {% endwith %}
+<style>
+.inner-form-template {
+  display: none;
+}
+
+.inner-form-entry {
+  border: 1px solid lightgray;
+  padding: 2% 0%;
+  margin: 10px 0px 10px 5%;
+}
+
+.inner-form-new {
+  margin: 10px
+}
+
+.inner-form-list button {
+  position: relative;
+  left: 90%;
+}
+
+.inner-form-new button {
+  position: relative;
+  left: 90%
+}
+</style>
+</fieldset>
