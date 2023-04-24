@@ -27,6 +27,22 @@ def addstr(a1, a2):
     return str(a1) + str(a2)
 
 
+@register.filter
+def fieldname_to_placeholder(fieldname):
+    depth = 1
+    last_matched_char = None
+    for char in fieldname:
+        if last_matched_char is None and char == "{":
+            last_matched_char = char
+        elif last_matched_char in ["{", "i"] and char == "i":
+            last_matched_char = char
+        elif last_matched_char == "i" and char == "}":
+            last_matched_char = None
+            depth += 1
+    return "{" + ('i'*depth) + "}"
+
+
+
 def render_form(serializer, template_pack=None, prefix=""):
     style = {"template_pack": template_pack} if template_pack else {}
     renderer = NestedHTMLFormRenderer(prefix=prefix)

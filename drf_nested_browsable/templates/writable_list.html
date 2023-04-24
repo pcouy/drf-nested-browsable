@@ -13,12 +13,14 @@
   {% with templateId=field.name|addstr:"-form-template" %}
     <div class="inner-form-list">
       {% if field.tree_root is None or field.tree_root %}
+      {% with placeholder=field.name|fieldname_to_placeholder %}
       <div class="inner-form-template" id="{{templateId}}">
-        <div class="inner-form-entry" data-index="{i}">
-          {% render_nested field.child prefix=field.name|addstr:"[{i}]" %}
+          <div class="inner-form-entry" data-index="{{ placeholder }}">
+          {% render_nested field.child prefix=field.name|addstr:"["|addstr:placeholder|addstr:"]" %}
           <button class="del-entry" data-field="{{field.name}}">-</button>
         </div>
       </div>
+      {% endwith %}
       {% endif %}
 
       <pre>
@@ -50,16 +52,20 @@
                     $(this).parent().remove();
                 })
             }
-            $('.inner-form-new > button.add-entry').on('click', function(e){
+            function addButtonHandler(e){
                 e.preventDefault();
                 let id = $(this).data("field")+"-form-template";
-                let templateElem = $("#"+id);
+                let templateElem = $(document.getElementById(id));
                 let n = templateElem.parent().children(".inner-form-entry").last().data("index") + 1;
                 n = n?n:0;
                 let newHtml = templateElem.html().replaceAll("{i}",n);
+                newHtml = newHtml.replaceAll("{ii","{i");
                 templateElem.parent().append(newHtml);
                 addDelEvents();
-            })
+                let newElem = templateElem.parent().children(".inner-form-entry").last();
+                newElem.find('.inner-form-new > button.add-entry').on('click', addButtonHandler);
+            }
+            $('.inner-form-new > button.add-entry').on('click', addButtonHandler)
             addDelEvents();
             $('form').on('submit', function() {
                 console.log($('.inner-form-template'));

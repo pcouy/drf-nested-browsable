@@ -30,7 +30,7 @@ The above commands will install the dependencies, run the DB migrations, and lau
 ### To do
 
 * Make the current example work :
-  * Fix backend and form for multiple levels of nesting
   * Do not show `parent` select list when showing forms as children of another form
+  * Show `details` (`HyperlinkedIdentityField`) when displayed as a child Serializer
 * Write documentation / Auto-generate it from the docstrings ([pdoc](https://pdoc.dev/) ?)
 * Write tests/specs
