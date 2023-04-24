@@ -3,3 +3,4 @@ poetry.lock
 /managed_backups/
 *.pyc
 __pycache__
+/example/db.sqlite3
