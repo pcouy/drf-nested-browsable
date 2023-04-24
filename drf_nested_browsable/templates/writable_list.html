@@ -43,30 +43,30 @@
       <button class="add-entry" data-field="{{field.name}}">+</button>
     </div>
     <script>
-      window.onload = function () {
-              function addDelEvents() {
+        window.onload = function () {
+            function addDelEvents() {
                 $('.inner-form-entry > button.del-entry').on('click', function(e){
-                        e.preventDefault();
-                        $(this).parent().remove();
+                    e.preventDefault();
+                    $(this).parent().remove();
                 })
-              }
-              $('.inner-form-new > button.add-entry').on('click', function(e){
-                      e.preventDefault();
-                      let id = $(this).data("field")+"-form-template";
-                      let templateElem = $("#"+id);
-                      let n = templateElem.parent().children(".inner-form-entry").last().data("index") + 1;
-                      n = n?n:0;
-                      let newHtml = templateElem.html().replaceAll("{i}",n);
-                      templateElem.parent().append(newHtml);
-                      addDelEvents();
-              })
-              addDelEvents();
-              $('form').on('submit', function() {
-                      console.log($('.inner-form-template'));
-                      $(".inner-form-template").remove();
-                      console.log($('.inner-form-template'));
-              })
-      };
+            }
+            $('.inner-form-new > button.add-entry').on('click', function(e){
+                e.preventDefault();
+                let id = $(this).data("field")+"-form-template";
+                let templateElem = $("#"+id);
+                let n = templateElem.parent().children(".inner-form-entry").last().data("index") + 1;
+                n = n?n:0;
+                let newHtml = templateElem.html().replaceAll("{i}",n);
+                templateElem.parent().append(newHtml);
+                addDelEvents();
+            })
+            addDelEvents();
+            $('form').on('submit', function() {
+                console.log($('.inner-form-template'));
+                $(".inner-form-template").remove();
+                console.log($('.inner-form-template'));
+            })
+        };
     </script>
   {% endwith %}
 <style>
