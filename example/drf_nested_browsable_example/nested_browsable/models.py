@@ -25,7 +25,7 @@ class MiddleModel(Model):
     Contains a relationship with `InnerModel`
     """
 
-    parent = models.ForeignKey(
+    middle_parent = models.ForeignKey(
         OuterModel,
         on_delete=models.CASCADE,
         verbose_name="Parent instance",
@@ -38,7 +38,7 @@ class InnerModel(Model):
     Will be used as a child model for the other models
     """
 
-    parent = models.ForeignKey(
+    inner_parent = models.ForeignKey(
         MiddleModel,
         on_delete=models.CASCADE,
         verbose_name="Parent instance",

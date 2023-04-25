@@ -12,7 +12,7 @@ from .models import InnerModel, MiddleModel, OuterModel
 class InnerSerializer(ModelSerializer):
     class Meta:
         model = InnerModel
-        fields = ["key", "value", "parent"]
+        fields = ["key", "value", "inner_parent"]
         list_serializer_class = WritableNestedListSerializer
         update_keys = "key"
 
@@ -22,8 +22,8 @@ class MiddleSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = MiddleModel
-        model_related_name = "parent"
-        fields = ["key", "value", "parent", "inner_children"]
+        model_related_name = "inner_parent"
+        fields = ["key", "value", "middle_parent", "inner_children"]
         list_serializer_class = WritableNestedListSerializer
         update_keys = "key"
 
@@ -33,5 +33,5 @@ class OuterSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = OuterModel
-        model_related_name = "parent"
+        model_related_name = "middle_parent"
         fields = ["key", "value", "middle_children"]
