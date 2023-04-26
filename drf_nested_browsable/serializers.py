@@ -142,24 +142,27 @@ class WritableNestedModelSerializer(ModelSerializer):
                 "`WritableNestedModelSerializer`"
             )
 
-        for field_name, field in self._declared_fields.items():
+        for field in self._declared_fields.values():
             if (
                 isinstance(field, WritableNestedListSerializer)
                 and self.Meta.model_related_name in field.child.fields.keys()
             ):
-                new_fields = []
-                for old_field in field.child.__class__.Meta.fields:
-                    if old_field != self.Meta.model_related_name:
-                        new_fields.append(old_field)
-
-                class NewChild(field.child.__class__):
-                    class Meta(field.child.__class__.Meta):
-                        fields = new_fields
-
-                NewChild.__name__ = field.child.__class__.__name__
-                field.child.__class__ = NewChild
+                self.alter_nested_child(field)
 
         super().__init__(*args, **kwargs)
+
+    def alter_nested_child(self, field):
+        new_fields = []
+        for old_field in field.child.__class__.Meta.fields:
+            if old_field != self.Meta.model_related_name:
+                new_fields.append(old_field)
+
+        class NewChild(field.child.__class__):
+            class Meta(field.child.__class__.Meta):
+                fields = new_fields
+
+        NewChild.__name__ = field.child.__class__.__name__
+        field.child.__class__ = NewChild
 
     def create(self, validated_data):
         many_children = {}
