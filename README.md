@@ -13,6 +13,7 @@ git clone https://github.com/pcouy/drf-nested-browsable
 cd drf-nested-browsable
 poetry install
 cd example
+poetry shell
 python manage.py migrate
 python manage.py runserver
 ```
