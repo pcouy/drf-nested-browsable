@@ -21,9 +21,9 @@ from rest_framework.routers import DefaultRouter
 from .nested_browsable.views import InnerViewSet, MiddleViewSet, OuterViewSet
 
 router = DefaultRouter()
-router.register(r'inner', InnerViewSet, basename='inner')
-router.register(r'middle', MiddleViewSet, basename='middle')
-router.register(r'outer', OuterViewSet, basename='outer')
+router.register(r'inner', InnerViewSet, basename='innermodel')
+router.register(r'middle', MiddleViewSet, basename='middlemodel')
+router.register(r'outer', OuterViewSet, basename='outermodel')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
