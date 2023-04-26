@@ -1,14 +1,30 @@
 """
-Provides writable serializers for Django Rest Framework
+Provides abstract writable nested serializers for Django Rest Framework
 
-Using these serializers requires a little more configuration than basic
-serializers.
-TODO: Mettre au propre
+These serializers require some additionnal configuration, that is done through the Meta
+class of the concrete classes
 """
 from rest_framework.serializers import ListSerializer, ModelSerializer
 
 
 class WritableNestedListSerializer(ListSerializer):
+    """
+    Can be set as the `list_serializer_class` for any serializer. This will make the
+    `many=True` version of the serializer writable and render an appropriate browsable
+    API form.
+
+    ```python
+    class InnerSerializer(ModelSerializer):
+        class Meta:
+            model = InnerModel
+            fields = ["key", "value", "inner_parent"]
+            list_serializer_class = WritableNestedListSerializer
+            update_keys = "key"
+    ```
+
+    You must use `InnerSerializer(many=True, ...)` either as the root serializer for a
+    `ListAPIView` or as a field of a `WritableNestedModelSerializer`.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -37,6 +53,11 @@ class WritableNestedListSerializer(ListSerializer):
 
     @property
     def parent_data(self):
+        """
+        Provides the data from the parent serializer. You must call
+        `WritableNestedListSerializer.set_parent_instance(instance)`
+        before accessing this property.
+        """
         self._set_parent_field_name()
         if "_parent_instance" not in dir(self) or self._parent_instance is None:
             raise AttributeError(
@@ -48,6 +69,9 @@ class WritableNestedListSerializer(ListSerializer):
         return {self._parent_field_name: self._parent_instance}
 
     def set_parent_instance(self, parent_instance):
+        """
+        Must be called before acessing the `parent_data` property
+        """
         self._parent_instance = parent_instance
 
     def create(self, validated_data):
@@ -89,6 +113,22 @@ class WritableNestedListSerializer(ListSerializer):
 
 
 class WritableNestedModelSerializer(ModelSerializer):
+    """
+    Abstract class for making model serializers that can write to nested models
+
+    ```python
+    class OuterSerializer(WritableNestedModelSerializer):
+        middle_children = MiddleSerializer(many=True, required=False, default=[])
+
+        class Meta:
+            model = OuterModel
+            model_related_name = "middle_parent"
+            fields = ["key", "value", "middle_children"]
+    ```
+
+    When using this as a base serializer, you must define `Meta.model_related_name`,
+    which is the child model field name for the relationship to the parent.
+    """
     class Meta:
         model_related_name = None
 
