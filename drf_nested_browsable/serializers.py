@@ -116,6 +116,7 @@ class WritableNestedModelSerializer(ModelSerializer):
                     class Meta(field.child.__class__.Meta):
                         fields = new_fields
 
+                NewChild.__name__ = field.child.__class__.__name__
                 field.child.__class__ = NewChild
 
         super().__init__(*args, **kwargs)
