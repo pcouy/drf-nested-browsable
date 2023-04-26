@@ -7,6 +7,7 @@ TODO: Mettre au propre
 """
 from rest_framework.serializers import ListSerializer, ModelSerializer
 
+
 class WritableNestedListSerializer(ListSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -77,7 +78,7 @@ class WritableNestedListSerializer(ListSerializer):
                         **{
                             key: new_elem[key] for key in keys if key in new_elem.keys()
                         },
-                        **self.parent_data
+                        **self.parent_data,
                     )
                     elem = self.child.update(elem, full_elem)
                 except instance.model.DoesNotExist:
