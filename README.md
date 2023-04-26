@@ -25,12 +25,13 @@ The above commands will install the dependencies, run the DB migrations, and lau
 
 * Ability to write to a reverse `ForeignKey` relationship using serializer `Meta` class
 * Dynamic form for `WritableNestedListSerializer` that allows adding and removing children from the Browsable API
+* Arbitrary nesting depth
+* Dynamically removing the parent field from serializers when used as an inner serializer
 * Basic example
 
 ### To do
 
 * Make the current example work :
-  * Do not show `parent` select list when showing forms as children of another form
   * Show `details` (`HyperlinkedIdentityField`) when displayed as a child Serializer
 * Write documentation / Auto-generate it from the docstrings ([pdoc](https://pdoc.dev/) ?)
 * Write tests/specs
