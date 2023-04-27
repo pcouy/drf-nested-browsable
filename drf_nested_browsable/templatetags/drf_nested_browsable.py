@@ -3,6 +3,7 @@ Provide utility template tags for rendering nested serializers
 """
 from django import template as tpl
 from rest_framework.renderers import HTMLFormRenderer
+from rest_framework.serializers import ListSerializer, Serializer
 
 register = tpl.Library()
 
@@ -49,9 +50,36 @@ def render_form(serializer, template_pack=None, prefix=""):
     return renderer.render(serializer.data, None, {"style": style})
 
 
+def write_only_serializer_class(serializer):
+    new_fields = {}
+    for field_name, field in serializer.fields.items():
+        if not field.read_only:
+            if isinstance(field, Serializer):
+                field.__class__ = write_only_serializer_class(field)
+            elif isinstance(field, ListSerializer):
+                field.child.__class__ = write_only_serializer_class(field.child)
+            new_fields.update({field_name: field})
+
+    class NewSer(serializer.__class__):
+        class Meta(serializer.__class__.Meta):
+            fields = list(new_fields.keys())
+
+    new_declared_fields = {}
+    for field_name in NewSer._declared_fields.keys():
+        new_field = new_fields.get(field_name, None)
+        if new_field is not None:
+            new_declared_fields.update({field_name: new_field})
+    NewSer._declared_fields = new_declared_fields
+
+    NewSer.__name__ = serializer.__class__.__name__
+    return NewSer
+
+
 @register.simple_tag
 def render_nested(serializer, data=None, prefix=""):
-    serializer_with_data = type(serializer)(data=data)
+    serializer_with_data = write_only_serializer_class(serializer)(
+        data=data, context=serializer.context
+    )
     serializer_with_data.is_valid()
     rendered_form = render_form(
         serializer_with_data, template_pack="rest_framework/horizontal", prefix=prefix
