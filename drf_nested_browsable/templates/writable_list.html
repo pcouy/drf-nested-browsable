@@ -23,10 +23,6 @@
       {% endwith %}
       {% endif %}
 
-      <pre>
-{{ field.child }}
-      </pre>
-
       {% for entry in field.value %}
         <div class="inner-form-entry" data-index="{{ forloop.counter0 }}">
           {% if field.proxied is None %}

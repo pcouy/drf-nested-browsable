@@ -25,6 +25,7 @@ class WritableNestedListSerializer(ListSerializer):
     You must use `InnerSerializer(many=True, ...)` either as the root serializer for a
     `ListAPIView` or as a field of a `WritableNestedModelSerializer`.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -129,6 +130,7 @@ class WritableNestedModelSerializer(ModelSerializer):
     When using this as a base serializer, you must define `Meta.model_related_name`,
     which is the child model field name for the relationship to the parent.
     """
+
     class Meta:
         model_related_name = None
 
@@ -142,7 +144,7 @@ class WritableNestedModelSerializer(ModelSerializer):
                 "`WritableNestedModelSerializer`"
             )
 
-        for field in self._declared_fields.values():
+        for field in self._declared_fields.values():  # pylint: disable=no-member
             if (
                 isinstance(field, WritableNestedListSerializer)
                 and self.Meta.model_related_name in field.child.fields.keys()
@@ -152,17 +154,23 @@ class WritableNestedModelSerializer(ModelSerializer):
         super().__init__(*args, **kwargs)
 
     def alter_nested_child(self, field):
+        """
+        Removes fields representing the current serializer from nested child
+        serializers (if it exists).
+
+        This uses `Meta.model_related_name`
+        """
         new_fields = []
         for old_field in field.child.__class__.Meta.fields:
             if old_field != self.Meta.model_related_name:
                 new_fields.append(old_field)
 
-        class NewChild(field.child.__class__):
+        class _NewChild(field.child.__class__):
             class Meta(field.child.__class__.Meta):
                 fields = new_fields
 
-        NewChild.__name__ = field.child.__class__.__name__
-        field.child.__class__ = NewChild
+        _NewChild.__name__ = field.child.__class__.__name__
+        field.child.__class__ = _NewChild
 
     def create(self, validated_data):
         many_children = {}

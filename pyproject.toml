@@ -34,6 +34,8 @@ pylint-django = "^2.5.3"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.pylint]
+no-docstring-rgx = "^(_|Meta$)"
 
 [tool.pylint.format]
 max-line-length = "88"
