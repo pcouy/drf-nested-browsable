@@ -32,7 +32,11 @@ The above commands will install the dependencies, run the DB migrations, and lau
 
 ### To do
 
-* Make the current example work :
-  * Show `details` (`HyperlinkedIdentityField`) when displayed as a child Serializer
 * Write documentation / Auto-generate it from the docstrings ([pdoc](https://pdoc.dev/) ?)
-* Write tests/specs
+* Write tests/specs (from example ?)
+* Better form design
+* Add `ManyToMany` to example (and test it)
+* Consider database schema constrains :
+  * Look into what `drf-writable-nested` does with uniqueness
+  * When the foreign key can be `null`, show a multiple select field for attaching orphan instances to a parent instance
+  * Show a multiple select field for `ManyToMany` relationships

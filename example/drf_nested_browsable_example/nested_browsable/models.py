@@ -44,3 +44,16 @@ class InnerModel(Model):
         verbose_name="Parent instance",
         related_name="inner_children",
     )
+
+
+class OtherInnerModel(Model):
+    """
+    Will be used as a second child model for the other models
+    """
+
+    inner_parent = models.ForeignKey(
+        MiddleModel,
+        on_delete=models.CASCADE,
+        verbose_name="Parent instance",
+        related_name="other_inner_children",
+    )

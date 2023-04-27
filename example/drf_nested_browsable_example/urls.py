@@ -18,14 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .nested_browsable.views import InnerViewSet, MiddleViewSet, OuterViewSet
+from .nested_browsable.views import (InnerViewSet, MiddleViewSet,
+                                     OtherInnerViewSet, OuterViewSet)
 
 router = DefaultRouter()
-router.register(r'inner', InnerViewSet, basename='innermodel')
-router.register(r'middle', MiddleViewSet, basename='middlemodel')
-router.register(r'outer', OuterViewSet, basename='outermodel')
+router.register(r"inner", InnerViewSet, basename="innermodel")
+router.register(r"otherinner", OtherInnerViewSet, basename="otherinnermodel")
+router.register(r"middle", MiddleViewSet, basename="middlemodel")
+router.register(r"outer", OuterViewSet, basename="outermodel")
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    *router.urls
-]
+urlpatterns = [path("admin/", admin.site.urls), *router.urls]
