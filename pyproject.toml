@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "drf-nested-browsable"
-version = "0.2.2"
+version = "0.2.3"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Framework :: Django",
@@ -18,7 +18,7 @@ packages = [{include = "drf_nested_browsable"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 djangorestframework = "^3.14.0"
-django = "^4.2"
+django = ">=4.2, <6.0"
 
 
 [tool.poetry.group.dev.dependencies]
