@@ -5,8 +5,9 @@ from drf_nested_browsable.serializers import (WritableNestedListSerializer,
                                               WritableNestedModelSerializer)
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         ModelSerializer)
+from rest_framework_recursive.fields import RecursiveField
 
-from .models import InnerModel, MiddleModel, OtherInnerModel, OuterModel
+from .models import InnerModel, MiddleModel, OtherInnerModel, OuterModel, RecursiveModel
 
 
 class InnerSerializer(HyperlinkedModelSerializer):
@@ -48,3 +49,15 @@ class OuterSerializer(WritableNestedModelSerializer):
         model = OuterModel
         model_related_name = "middle_parent"
         fields = ["key", "value", "middle_children"]
+
+
+class RecursiveSerializer(WritableNestedModelSerializer):
+    children = RecursiveField(many=True, required=False, default=[])
+
+    class Meta:
+        model = RecursiveModel
+        model_related_name = "parent"
+        fields = ["key", "value", "children"]
+        list_serializer_class = WritableNestedListSerializer
+        update_keys = "key"
+

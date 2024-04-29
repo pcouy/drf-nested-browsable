@@ -3,6 +3,7 @@ Simple nested models for demonstration purpose
 """
 from django.db import models
 
+
 class Model(models.Model):
     key = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
@@ -56,4 +57,14 @@ class OtherInnerModel(Model):
         on_delete=models.CASCADE,
         verbose_name="Parent instance",
         related_name="other_inner_children",
+    )
+
+
+class RecursiveModel(Model):
+    parent = models.ForeignKey(
+        "self",
+        related_name="children",
+        on_delete=models.CASCADE,
+        null=True,
+        default=None,
     )

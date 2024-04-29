@@ -5,6 +5,7 @@ These serializers require some additionnal configuration, that is done through t
 class of the concrete classes
 """
 from rest_framework.serializers import ListSerializer, ModelSerializer
+from rest_framework_recursive.fields import RecursiveField
 
 
 class WritableNestedListSerializer(ListSerializer):
@@ -186,6 +187,8 @@ class WritableNestedModelSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         many_children = {}
         for k, ser in self.fields.items():
+            if isinstance(ser, RecursiveField):
+                ser = ser.proxied
             if isinstance(ser, WritableNestedListSerializer):
                 ser.set_parent_instance(instance)
                 many_children.update({k: (ser, validated_data.pop(k, None))})

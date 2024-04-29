@@ -3,9 +3,14 @@ Views using the demo serializers
 """
 from rest_framework.viewsets import ModelViewSet
 
-from .models import InnerModel, MiddleModel, OtherInnerModel, OuterModel
-from .serializers import (InnerSerializer, MiddleSerializer,
-                          OtherInnerSerializer, OuterSerializer)
+from .models import InnerModel, MiddleModel, OtherInnerModel, OuterModel, RecursiveModel
+from .serializers import (
+    InnerSerializer,
+    MiddleSerializer,
+    OtherInnerSerializer,
+    OuterSerializer,
+    RecursiveSerializer,
+)
 
 
 class InnerViewSet(ModelViewSet):
@@ -26,3 +31,8 @@ class MiddleViewSet(ModelViewSet):
 class OuterViewSet(ModelViewSet):
     queryset = OuterModel.objects.all()
     serializer_class = OuterSerializer
+
+
+class RecursiveViewSet(ModelViewSet):
+    queryset = RecursiveModel.objects.all()
+    serializer_class = RecursiveSerializer

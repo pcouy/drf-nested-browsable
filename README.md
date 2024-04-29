@@ -29,6 +29,8 @@ The above commands will install the dependencies, run the DB migrations, and lau
 * Arbitrary nesting depth
 * Dynamically removing the parent field from serializers when used as an inner serializer
 * Basic example
+* Support `RecursiveField` from
+  [`djangorestframework-recursive`](https://github.com/heywbj/django-rest-framework-recursive)
 
 ### To do
 
