@@ -185,6 +185,8 @@ class WritableNestedModelSerializer(ModelSerializer):
                 many_children.update({k: (ser, validated_data.pop(k, None))})
         instance = super().create(validated_data)
         for k, (ser, list_data) in many_children.items():
+            if ser.read_only:
+                continue
             ser.set_parent_instance(instance)
             ser.create(list_data)
         return instance
@@ -199,5 +201,7 @@ class WritableNestedModelSerializer(ModelSerializer):
                 many_children.update({k: (ser, validated_data.pop(k, None))})
         instance = super().update(instance, validated_data)
         for k, (ser, list_data) in many_children.items():
+            if ser.read_only:
+                continue
             ser.update(getattr(instance, k), list_data)
         return instance
