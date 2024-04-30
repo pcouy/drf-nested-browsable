@@ -42,6 +42,15 @@ class MiddleSerializer(HyperlinkedModelSerializer, WritableNestedModelSerializer
         update_keys = "key"
 
 
+class MiddleSerializerOnId(MiddleSerializer):
+    class Meta(MiddleSerializer.Meta):
+        fields = ["id"] + MiddleSerializer.Meta.fields
+        update_keys = "id"
+        extra_kwargs = {
+            "id": {"read_only": False, "required": False}
+        }
+
+
 class OuterSerializer(WritableNestedModelSerializer):
     middle_children = MiddleSerializer(many=True, required=False, default=[])
 
@@ -49,6 +58,10 @@ class OuterSerializer(WritableNestedModelSerializer):
         model = OuterModel
         model_related_name = "middle_parent"
         fields = ["key", "value", "middle_children"]
+
+
+class OuterSerializerOnId(OuterSerializer):
+    middle_children = MiddleSerializerOnId(many=True, required=False, default=[])
 
 
 class RecursiveSerializer(WritableNestedModelSerializer):

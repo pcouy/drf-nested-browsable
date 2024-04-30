@@ -9,6 +9,7 @@ from .serializers import (
     MiddleSerializer,
     OtherInnerSerializer,
     OuterSerializer,
+    OuterSerializerOnId,
     RecursiveSerializer,
 )
 
@@ -31,6 +32,10 @@ class MiddleViewSet(ModelViewSet):
 class OuterViewSet(ModelViewSet):
     queryset = OuterModel.objects.all()
     serializer_class = OuterSerializer
+
+
+class OuterViewSetOnId(OuterViewSet):
+    serializer_class = OuterSerializerOnId
 
 
 class RecursiveViewSet(ModelViewSet):

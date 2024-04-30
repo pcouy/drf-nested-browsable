@@ -99,16 +99,21 @@ class WritableNestedListSerializer(ListSerializer):
             for new_elem in validated_data:
                 full_elem = {**new_elem, **self.parent_data}
 
-                try:
-                    elem = instance.get(
-                        **{
-                            key: new_elem[key] for key in keys if key in new_elem.keys()
-                        },
-                        **self.parent_data,
-                    )
-                    elem = self.child.update(elem, full_elem)
-                except instance.model.DoesNotExist:
+                if not set(new_elem).intersection(set(keys)):
                     elem = self.child.create(full_elem)
+                else:
+                    try:
+                        elem = instance.get(
+                            **{
+                                key: new_elem[key]
+                                for key in keys
+                                if key in new_elem.keys()
+                            },
+                            **self.parent_data,
+                        )
+                        elem = self.child.update(elem, full_elem)
+                    except instance.model.DoesNotExist:
+                        elem = self.child.create(full_elem)
                 updated_ids.append(elem.id)
 
             instance.exclude(id__in=updated_ids).delete()
